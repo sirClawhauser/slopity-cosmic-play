@@ -103,6 +103,26 @@
 <body>
 <div id="app"></div>
 
+<div id="errlog" style="position:fixed;left:0;right:0;top:0;z-index:99;font:11px ui-monospace,monospace;color:#ffd9a0;background:rgba(70,10,10,0.9);padding:8px 12px;display:none;white-space:pre-wrap;word-break:break-all;max-height:45vh;overflow:auto"></div>
+<script>
+(function () {
+  function show(msg) {
+    var el = document.getElementById('errlog')
+    if (!el) return
+    el.style.display = 'block'
+    el.textContent += msg + '\n'
+  }
+  addEventListener('error', function (e) {
+    show('[error] ' + (e.message || e.type) + ' @' + String(e.filename || '').split('/').pop() + ':' + e.lineno)
+  })
+  addEventListener('unhandledrejection', function (e) {
+    var r = e.reason
+    show('[promise] ' + (r && (r.stack || r.message) || r))
+  })
+  window.__showerr = show
+})()
+</script>
+
 <div id="info" class="panel">
   <h1>Slopity&nbsp;Cosmic <span>· three.js r185</span></h1>
   <p>
